@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottozahlengenerator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .copy-btn:hover {
+            background: #e0e0e0;
+            border-color: #bbb;
+        }
+
+        .copy-btn.copied {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .numbers-display {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #e0e0e0;
+            min-height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .number-ball {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .number-ball:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .stats {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .stats-label {
+            font-weight: 600;
+        }
+
+        .stats-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .patterns {
+            background: #ffe0b2;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .patterns h3 {
+            margin-bottom: 10px;
+            color: #ff6f00;
+        }
+
+        .pattern-item {
+            margin: 5px 0;
+        }
+
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .number-ball {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 Lotto</h1>
+        <p class="subtitle">Intelligenter Zahlengenerator</p>
+
+        <div class="info-box">
+            <strong>ℹ️ Wie es funktioniert:</strong><br>
+            Der Generator erstellt ungewöhnliche Kombinationen, die Menschen sich seltener ausdenken würden. Maximal zwei Zahlen folgen aufeinander.
+        </div>
+
+        <div class="buttons">
+            <button class="generate-btn" onclick="generateNumbers()">Zahlen generieren</button>
+            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" style="display: none;">
+                📋 Kopieren
+            </button>
+        </div>
+
+        <div class="numbers-display" id="numbersDisplay">
+            <div style="color: #999; text-align: center; width: 100%;">
+                Klicke auf "Zahlen generieren" um zu starten
+            </div>
+        </div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stats-item">
+                <span class="stats-label">Durchschnittlicher Abstand:</span>
+                <span class="stats-value" id="avgDistance">-</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-label">Standardabweichung:</span>
+                <span class="stats-value" id="stdDeviation">-</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-label">Gewöhnlichkeits-Score:</span>
+                <span class="stats-value" id="normalityScore">-</span>
+            </div>
+        </div>
+
+        <div class="patterns" id="patterns" style="display: none;">
+            <h3>✓ Eigenschaften dieser Kombination:</h3>
+            <div id="patternsList"></div>
+        </div>
+
+        <div class="footer">
+            <p>💡 Keine Gewinngarantie – Lotto bleibt Lotto!</p>
+            <p style="margin-top: 8px; font-size: 0.8em;">© 2026 Lottozahlengenerator</p>
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage">✓ Zahlen kopiert!</div>
+
+    <script>
+        let currentNumbers = [];
+
+        // Prüfe ob maximal 2 aufeinanderfolgende Zahlen vorhanden sind
+        function hasMaxTwoConsecutive(numbers) {
+            const sorted = [...numbers].sort((a, b) => a - b);
+            let consecutiveCount = 1;
+            
+            for (let i = 1; i < sorted.length; i++) {
+                if (sorted[i] === sorted[i - 1] + 1) {
+                    consecutiveCount++;
+                    if (consecutiveCount > 2) {
+                        return false;
+                    }
+                } else {
+                    consecutiveCount = 1;
+                }
+            }
+            return true;
+        }
+
+        // Berechne wie "ungewöhnlich" eine Kombination ist
+        function calculateNormalityScore(numbers) {
+            const sorted = [...numbers].sort((a, b) => a - b);
+            let score = 0;
+
+            // Bestrafe arithmetische Folgen
+            let diffs = [];
+            for (let i = 1; i < sorted.length; i++) {
+                diffs.push(sorted[i] - sorted[i - 1]);
+            }
+
+            // Gleichmäßige Abstände sind "gewöhnlich"
+            const avgDiff = diffs.reduce((a, b) => a + b) / diffs.length;
+            const variance = diffs.reduce((sum, d) => sum + Math.abs(d - avgDiff), 0) / diffs.length;
+            
+            // Je größer die Varianz, desto ungewöhnlicher
+            score += variance * 2;
+
+            // Bestrafe Zahlen, die Menschen gerne wählen (Geburtstage, Jahrestage, Glückszahlen)
+            const populularNumbers = [1, 7, 13, 21, 27, 32, 49];
+            const unpopularCount = numbers.filter(n => !populularNumbers.includes(n)).length;
+            score += unpopularCount * 1.5;
+
+            // Bestrafe zu gleichmäßige Verteilung (hoch und niedrig gemischt ist gewöhnlich)
+            const lowNumbers = numbers.filter(n => n <= 24).length;
+            const highNumbers = numbers.filter(n => n > 25).length;
+            const balance = Math.abs(lowNumbers - highNumbers);
+            score -= balance * 0.8; // Je unausgewogener, desto besser
+
+            // Bestrafe symmetrische Zahlen
+            const symmetricPairs = [[7, 43], [8, 42], [9, 41], [10, 40], [17, 33], [18, 32], [19, 31], [20, 30]];
+            const hasSymmetric = symmetricPairs.some(pair => numbers.includes(pair[0]) && numbers.includes(pair[1]));
+            if (hasSymmetric) score -= 3;
+
+            // Bestrafe Nummern mit zu gleichmäßigen Mustern
+            if (diffs.every(d => d === diffs[0])) {
+                score -= 10; // Arithmetische Folge ist sehr gewöhnlich
+            }
+
+            return Math.max(0, Math.round(score * 10) / 10);
+        }
+
+        // Generiere Lottozahlen mit Einschränkungen
+        function generateNumbers() {
+            let validNumbers;
+            let maxAttempts = 1000;
+            let attempts = 0;
+
+            do {
+                validNumbers = [];
+                while (validNumbers.length < 6) {
+                    let num = Math.floor(Math.random() * 49) + 1;
+                    if (!validNumbers.includes(num)) {
+                        validNumbers.push(num);
+                    }
+                }
+                attempts++;
+            } while (!hasMaxTwoConsecutive(validNumbers) && attempts < maxAttempts);
+
+            currentNumbers = validNumbers.sort((a, b) => a - b);
+
+            console.log("Generierte Zahlen:", currentNumbers);
+            console.log("Hat maximal 2 aufeinanderfolgende:", hasMaxTwoConsecutive(currentNumbers));
+
+            displayNumbers();
+            displayStats();
+            displayPatterns();
+        }
+
+        // Zeige Zahlen an
+        function displayNumbers() {
+            const display = document.getElementById('numbersDisplay');
+            display.innerHTML = currentNumbers
+                .map(num => `<div class="number-ball">${num}</div>`)
+                .join('');
+
+            document.getElementById('copyBtn').style.display = 'block';
+        }
+
+        // Zeige Statistiken an
+        function displayStats() {
+            if (currentNumbers.length === 0) return;
+
+            const sorted = [...currentNumbers].sort((a, b) => a - b);
+            let diffs = [];
+            for (let i = 1; i < sorted.length; i++) {
+                diffs.push(sorted[i] - sorted[i - 1]);
+            }
+
+            const avgDistance = (diffs.reduce((a, b) => a + b) / diffs.length).toFixed(2);
+            
+            const mean = diffs.reduce((a, b) => a + b) / diffs.length;
+            const variance = diffs.reduce((sum, d) => sum + Math.pow(d - mean, 2), 0) / diffs.length;
+            const stdDeviation = Math.sqrt(variance).toFixed(2);
+
+            const normalityScore = calculateNormalityScore(currentNumbers);
+
+            document.getElementById('avgDistance').textContent = avgDistance;
+            document.getElementById('stdDeviation').textContent = stdDeviation;
+            document.getElementById('normalityScore').textContent = normalityScore;
+            document.getElementById('stats').style.display = 'block';
+        }
+
+        // Zeige Muster/Eigenschaften an
+        function displayPatterns() {
+            const patterns = [];
+            const sorted = [...currentNumbers].sort((a, b) => a - b);
+
+            // Prüfe verschiedene Eigenschaften
+            const unpopularNumbers = currentNumbers.filter(n => ![1, 7, 13, 21, 27, 32, 49].includes(n));
+            if (unpopularNumbers.length >= 5) {
+                patterns.push('✓ Überwiegend ungewöhnliche Zahlen');
+            }
+
+            const lowNumbers = currentNumbers.filter(n => n <= 24).length;
+            const highNumbers = currentNumbers.filter(n => n > 25).length;
+            if (Math.abs(lowNumbers - highNumbers) >= 4) {
+                patterns.push('✓ Unausgewogene Verteilung (ungewöhnlich)');
+            }
+
+            let diffs = [];
+            for (let i = 1; i < sorted.length; i++) {
+                diffs.push(sorted[i] - sorted[i - 1]);
+            }
+            if (Math.max(...diffs) > 10) {
+                patterns.push('✓ Große Lücken zwischen Zahlen');
+            }
+
+            if (hasMaxTwoConsecutive(currentNumbers)) {
+                patterns.push('✓ Maximal 2 aufeinanderfolgende Zahlen');
+            }
+
+            const symmetricPairs = [[7, 43], [8, 42], [9, 41], [10, 40], [17, 33], [18, 32], [19, 31], [20, 30]];
+            const hasSymmetric = symmetricPairs.some(pair => currentNumbers.includes(pair[0]) && currentNumbers.includes(pair[1]));
+            if (!hasSymmetric) {
+                patterns.push('✓ Keine symmetrischen Spiegelpaarungen');
+            }
+
+            const allOdd = currentNumbers.every(n => n % 2 === 1);
+            const allEven = currentNumbers.every(n => n % 2 === 0);
+            if (!allOdd && !allEven) {
+                patterns.push('✓ Gute Mischung aus geraden und ungeraden Zahlen');
+            }
+
+            if (patterns.length > 0) {
+                document.getElementById('patternsList').innerHTML = patterns
+                    .map(p => `<div class="pattern-item">${p}</div>`)
+                    .join('');
+                document.getElementById('patterns').style.display = 'block';
+            }
+        }
+
+        // Kopiere Zahlen in Zwischenablage
+        function copyToClipboard() {
+            const text = currentNumbers.join(' - ');
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.getElementById('successMessage');
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 2000);
+
+                // Button-Rückmeldung
+                const btn = document.getElementById('copyBtn');
+                btn.classList.add('copied');
+                btn.textContent = '✓ Kopiert!';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.textContent = '📋 Kopieren';
+                }, 2000);
+            });
+        }
+
+        // Generiere beim Laden automatisch erste Zahlen
+        window.addEventListener('load', () => {
+            generateNumbers();
+        });
+    </script>
+</body>
+</html>
